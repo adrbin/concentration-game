@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ConcentrationViewController: UIViewController {
     
     private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairOfCards)
     
@@ -64,38 +64,43 @@ class ViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
-        updateFlipCountLabel()
-        updateScoreLabel()
-        view.backgroundColor = backgroundColor
-        for index in cardButtons.indices {
-            let button = cardButtons[index]
-            let card = game.cards[index]
-            if card.isFaceUp {
-                button.setTitle(emoji(for: card), for: UIControlState.normal)
-                button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            } else {
-                button.setTitle("", for: UIControlState.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) :#colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        if cardButtons != nil {
+            updateFlipCountLabel()
+            updateScoreLabel()
+            view.backgroundColor = backgroundColor
+            for index in cardButtons.indices {
+                let button = cardButtons[index]
+                let card = game.cards[index]
+                if card.isFaceUp {
+                    button.setTitle(emoji(for: card), for: UIControlState.normal)
+                    button.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+                } else {
+                    button.setTitle("", for: UIControlState.normal)
+                    button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) :#colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                }
             }
         }
+        
     }
-    let themes = ["🎃👻🐲☃️🦉🦇🐺🕷🦂🐍🦅🦑",
-                          "😀😆😂🤣☺️😇😍😜😎😡😱😓",
-                          "👏👐👊👍👎🤟👌🖐🤙✍️🙏💪",
-                          "🇵🇱🇨🇳🇯🇵🇺🇸🇹🇭🇦🇺🇫🇷🏴󠁧󠁢󠁥󠁮󠁧󠁿🇩🇪🇰🇷🇪🇸🇺🇦",
-                          "🚗🚚🚌🛴🚲🚠🚄✈️🚁⛵️🚀🚢",
-                          "🍎🍋🍇🍉🍓🍌🍒🥝🍍🍑🥥🍐"]
+    
+    var theme: String? {
+        didSet {
+            emojiChoices = theme ?? ""
+            emoji = [:]
+            updateViewFromModel()
+        }
+    }
     let backgroundColors = [#colorLiteral(red: 0.1215686277, green: 0.1294117719, blue: 0.1411764771, alpha: 1), #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1), #colorLiteral(red: 0.521568656, green: 0.1098039225, blue: 0.05098039284, alpha: 1), #colorLiteral(red: 0.09019608051, green: 0, blue: 0.3019607961, alpha: 1), #colorLiteral(red: 0.3098039329, green: 0.2039215714, blue: 0.03921568766, alpha: 1), #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1)]
     
     private(set) var backgroundColor: UIColor!
-    private var emojiChoices: String!
+    private var emojiChoices = "🎃👻🐲☃️🦉🦇🐺🕷🦂🐍🦅🦑"
     private var emoji = [Card: String]()
     
     func chooseRandomTheme() {
-        let randomThemeNumber = themes.count.arc4random
-        emojiChoices = themes[randomThemeNumber]
+        let randomThemeNumber = backgroundColors.count.arc4random
+//        emojiChoices = themes[randomThemeNumber]
         backgroundColor = backgroundColors[randomThemeNumber]
-        emoji = [Card: String]()
+//        emoji = [:]
     }
     
     override func viewDidLoad() {
